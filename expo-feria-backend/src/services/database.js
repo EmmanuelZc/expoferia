@@ -1,5 +1,5 @@
-const { CosmosClient } = require("@azure/cosmos");
-const config = require("../config");
+import { CosmosClient } from "@azure/cosmos"; // Usar la exportación nombrada
+import config from "../config.js"; // Mantener la importación de config
 
 const client = new CosmosClient({
   endpoint: config.cosmosDb.endpoint,
@@ -8,31 +8,29 @@ const client = new CosmosClient({
 
 const database = client.database(config.cosmosDb.databaseId);
 
-module.exports = {
-  containers: {
-    stands: database.container(config.cosmosDb.containers.stands),
-    reservations: database.container(config.cosmosDb.containers.reservations),
-    users: database.container(config.cosmosDb.containers.users),
-  },
+export const getDatabase = () => database;
 
-  // Helper para queries comunes
-  queryItems: async (container, querySpec) => {
-    const { resources } = await container.items.query(querySpec).fetchAll();
-    return resources;
-  },
+// Contenedores para acceso a la base de datos
+export const containers = {
+  stands: database.container(config.cosmosDb.containers.stands),
+  reservations: database.container(config.cosmosDb.containers.reservations),
+  users: database.container(config.cosmosDb.containers.users),
+};
 
-  // Helper para operaciones geoespaciales
-  queryStandsInArea: async (polygonCoordinates) => {
-    const querySpec = {
-      query: `SELECT * FROM s WHERE ST_WITHIN(s.geojson, { 
-        "type": "Polygon", 
-        "coordinates": @polygon 
-      })`,
-      parameters: [{ name: "@polygon", value: polygonCoordinates }],
-    };
-    return module.exports.queryItems(
-      module.exports.containers.stands,
-      querySpec
-    );
-  },
+// Helper para queries comunes
+export const queryItems = async (container, querySpec) => {
+  const { resources } = await container.items.query(querySpec).fetchAll();
+  return resources;
+};
+
+// Helper para operaciones geoespaciales
+export const queryStandsInArea = async (polygonCoordinates) => {
+  const querySpec = {
+    query: `SELECT * FROM s WHERE ST_WITHIN(s.geojson, { 
+      "type": "Polygon", 
+      "coordinates": @polygon 
+    })`,
+    parameters: [{ name: "@polygon", value: polygonCoordinates }],
+  };
+  return queryItems(containers.stands, querySpec);
 };

@@ -1,8 +1,9 @@
-module.exports = {
+// src/config/config.js
+export const config = {
   cosmosDb: {
     endpoint: process.env.COSMOSDB_ENDPOINT,
     key: process.env.COSMOSDB_KEY,
-    databaseId: "ExpoFeriaDB",
+    databaseId: "mapadb",
     containers: {
       stands: "Stands",
       reservations: "Reservations",
@@ -24,3 +25,5 @@ module.exports = {
     saltRounds: 10,
   },
 };
+
+export default config;
