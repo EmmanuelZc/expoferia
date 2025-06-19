@@ -5,9 +5,9 @@ export const config = {
     key: process.env.COSMOSDB_KEY,
     databaseId: "mapadb",
     containers: {
-      stands: "Stands",
-      reservations: "Reservations",
-      users: "Users",
+      stands: "stands",
+      reservations: "reservas",
+      users: "usuarios",
     },
   },
   stripe: {
