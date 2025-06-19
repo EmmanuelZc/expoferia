@@ -1,11 +1,9 @@
 import express from "express";
-import {
-  registerFunction,
-  loginFunction,
-} from "../functions/auth/AuthFunctions.js";
+import { index as loginFunction } from "../../login/index.js";
+import { index as registerFunction } from "../../register/index.js";
 const router = express.Router();
 
-router.post("/login", registerFunction);
-router.post("/register", loginFunction);
+router.post("/login", loginFunction);
+router.post("/register", registerFunction);
 
 export default router;
